@@ -50,4 +50,7 @@ python -m ipykernel install --user --name project-setup
 pip install ipywidgets
 ```
 
+---
+
+I think I have to use GPU to implement these code using Machines I buy or Cloud I rent.
 
