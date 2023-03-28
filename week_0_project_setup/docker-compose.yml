@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  jupyter:
+    image: week0
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/root/src
+    command: jupyter notebook --allow-root --ip=0.0.0.0
