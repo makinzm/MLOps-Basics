@@ -6,5 +6,5 @@ services:
     ports:
       - "8888:8888"
     volumes:
-      - .:/root/working
+      - .:/root/src
     command: jupyter notebook --allow-root --ip=0.0.0.0
