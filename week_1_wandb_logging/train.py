@@ -89,6 +89,8 @@ def main():
         # limit_train_batches=0.25,
         # limit_val_batches=0.25
     )
+    # I think I have to implement seed_everything
+    #   https://lightning.ai/docs/pytorch/stable/common/trainer.html#reproducibility
     # https://lightning.ai/docs/pytorch/stable/common/trainer.html#fit
     trainer.fit(cola_model, cola_data)
 

@@ -13,6 +13,7 @@ import seaborn as sns
 class ColaModel(pl.LightningModule):
     def __init__(self, model_name="google/bert_uncased_L-2_H-128_A-2", lr=3e-5):
         super(ColaModel, self).__init__()
+        # https://lightning.ai/docs/pytorch/stable/common/lightning_module.html#id1
         self.save_hyperparameters()
 
         self.bert = AutoModelForSequenceClassification.from_pretrained(
@@ -44,9 +45,12 @@ class ColaModel(pl.LightningModule):
         # loss = F.cross_entropy(logits, batch["label"])
         preds = torch.argmax(outputs.logits, 1)
         train_acc = self.train_accuracy_metric(preds, batch["label"])
-        # https://lightning.ai/docs/pytorch/stable/api/lightning.pytorch.core.LightningModule.html#lightning.pytorch.core.LightningModule.log
+        # log
+        #   https://lightning.ai/docs/pytorch/stable/api/lightning.pytorch.core.LightningModule.html#lightning.pytorch.core.LightningModule.log
         self.log("train/loss", outputs.loss, prog_bar=True, on_epoch=True)
         self.log("train/acc", train_acc, prog_bar=True, on_epoch=True)
+        # Model outputs
+        #   https://huggingface.co/docs/transformers/main_classes/output#model-outputs
         return outputs.loss
 
     def validation_step(self, batch, batch_idx):
