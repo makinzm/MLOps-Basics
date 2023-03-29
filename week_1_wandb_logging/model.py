@@ -44,6 +44,7 @@ class ColaModel(pl.LightningModule):
         # loss = F.cross_entropy(logits, batch["label"])
         preds = torch.argmax(outputs.logits, 1)
         train_acc = self.train_accuracy_metric(preds, batch["label"])
+        # https://lightning.ai/docs/pytorch/stable/api/lightning.pytorch.core.LightningModule.html#lightning.pytorch.core.LightningModule.log
         self.log("train/loss", outputs.loss, prog_bar=True, on_epoch=True)
         self.log("train/acc", train_acc, prog_bar=True, on_epoch=True)
         return outputs.loss
