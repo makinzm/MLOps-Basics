@@ -32,12 +32,15 @@ class ColaModel(pl.LightningModule):
         self.precision_micro_metric = torchmetrics.Precision(average="micro")
         self.recall_micro_metric = torchmetrics.Recall(average="micro")
 
+    # https://lightning.ai/docs/pytorch/stable/common/lightning_module.html#forward
+    # Model's output
     def forward(self, input_ids, attention_mask, labels=None):
         outputs = self.bert(
             input_ids=input_ids, attention_mask=attention_mask, labels=labels
         )
         return outputs
 
+    # https://lightning.ai/docs/pytorch/stable/common/lightning_module.html#training-step
     def training_step(self, batch, batch_idx):
         outputs = self.forward(
             batch["input_ids"], batch["attention_mask"], labels=batch["label"]
@@ -53,6 +56,7 @@ class ColaModel(pl.LightningModule):
         #   https://huggingface.co/docs/transformers/main_classes/output#model-outputs
         return outputs.loss
 
+    # https://lightning.ai/docs/pytorch/stable/common/lightning_module.html#validation-step
     def validation_step(self, batch, batch_idx):
         labels = batch["label"]
         outputs = self.forward(
@@ -78,6 +82,8 @@ class ColaModel(pl.LightningModule):
         self.log("valid/f1", f1, prog_bar=True, on_epoch=True)
         return {"labels": labels, "logits": outputs.logits}
 
+    # on_validation_epoch_end (?)
+    # https://lightning.ai/docs/pytorch/stable/common/lightning_module.html#on-validation-epoch-end
     def validation_epoch_end(self, outputs):
         labels = torch.cat([x["labels"] for x in outputs])
         logits = torch.cat([x["logits"] for x in outputs])
@@ -111,5 +117,6 @@ class ColaModel(pl.LightningModule):
         #     {"roc": wandb.plot.roc_curve(labels.numpy(), logits.numpy())}
         # )
 
+    # https://lightning.ai/docs/pytorch/stable/common/lightning_module.html#configure-optimizers
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=self.hparams["lr"])

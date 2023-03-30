@@ -13,8 +13,11 @@ class DataModule(pl.LightningDataModule):
         self.batch_size = batch_size
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
 
+    # Default function
+    #   https://lightning.ai/docs/pytorch/latest/data/datamodule.html#lightningdatamodule-api
     def prepare_data(self):
         cola_dataset = load_dataset("glue", "cola")
+        # However, train_data and val_data aren't default member variable.
         self.train_data = cola_dataset["train"]
         self.val_data = cola_dataset["validation"]
 
@@ -26,6 +29,8 @@ class DataModule(pl.LightningDataModule):
             max_length=128,
         )
 
+    # Default function
+    #   https://lightning.ai/docs/pytorch/latest/data/datamodule.html#lightningdatamodule-api
     def setup(self, stage=None):
         # we set up only relevant datasets when stage is specified
         if stage == "fit" or stage is None:
